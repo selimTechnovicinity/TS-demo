@@ -17,7 +17,7 @@ const loginUserIntoDB = async (payload: TLogin) => {
     userData?.password
   );
   if (!isPasswordMatched) {
-    throw new AppError(403, "Credential errors. password not matched");
+    throw new AppError(403, "Credential errors.");
   }
   const jwtPayload = {
     userId: userData.email,
