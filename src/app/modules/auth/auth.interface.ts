@@ -1,5 +1,4 @@
-export type TUser = {
-  name: string;
+export type TLogin = {
   email: string;
   password: string;
 };

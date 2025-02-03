@@ -1,5 +1,5 @@
-import catchAsync from "../../utils/catchAsync";
-import sendResponse from "../../utils/sendResponse";
+import catchAsync from "../utils/catchAsync";
+import sendResponse from "../utils/sendResponse";
 import { UserServices } from "./user.service";
 
 const createUser = catchAsync(async (req, res) => {
@@ -14,13 +14,13 @@ const createUser = catchAsync(async (req, res) => {
 });
 
 const getAllUsers = catchAsync(async (req, res) => {
-  //   const result = await UserServices.getAllUsersFromDB();
+  const result = await UserServices.getAllUsersFromDB();
 
   sendResponse(res, {
     statusCode: 200,
     success: true,
     message: "Users data retrived succesfully",
-    data: null,
+    data: result,
   });
 });
 
