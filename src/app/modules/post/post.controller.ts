@@ -24,7 +24,33 @@ const getAllPosts = catchAsync(async (req, res) => {
   });
 });
 
+const getSinglePosts = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await PostServices.getSinglePostFromDB(id);
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Post data retrived succesfully",
+    data: result,
+  });
+});
+
+const deletePosts = catchAsync(async (req, res) => {
+  const { id } = req.params;
+  const result = await PostServices.deletePostFromDB(id);
+
+  sendResponse(res, {
+    statusCode: 200,
+    success: true,
+    message: "Post data deleted succesfully",
+    data: result,
+  });
+});
+
 export const PostControllers = {
   createPost,
   getAllPosts,
+  getSinglePosts,
+  deletePosts,
 };

@@ -10,6 +10,7 @@ const postSchema = new Schema<TPost>(
     content: {
       type: String,
       required: true,
+      unique: true,
     },
     authorId: {
       type: Schema.Types.ObjectId,
