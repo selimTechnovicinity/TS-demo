@@ -12,6 +12,7 @@ const getAllPostsFromDB = async () => {
   return result;
 };
 
+
 export const PostServices = {
   createPostIntoDB,
   getAllPostsFromDB,
