@@ -1,3 +1,4 @@
+import { JwtPayload } from "jsonwebtoken";
 import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendResponse";
 import { UserServices } from "./user.service";
@@ -26,7 +27,10 @@ const getAllUsers = catchAsync(async (req, res) => {
 
 const getSingleUser = catchAsync(async (req, res) => {
   const { id } = req.params;
-  const result = await UserServices.getSingleUserFromDB(id);
+  const result = await UserServices.getSingleUserFromDB(
+    req.user as JwtPayload,
+    id
+  );
 
   sendResponse(res, {
     statusCode: 200,
@@ -38,7 +42,10 @@ const getSingleUser = catchAsync(async (req, res) => {
 
 const deleteUser = catchAsync(async (req, res) => {
   const { id } = req.params;
-  const result = await UserServices.deleteUserFromDB(id);
+  const result = await UserServices.deleteUserFromDB(
+    req.user as JwtPayload,
+    id
+  );
 
   sendResponse(res, {
     statusCode: 200,

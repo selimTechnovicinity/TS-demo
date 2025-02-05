@@ -1,3 +1,4 @@
+import { JwtPayload } from "jsonwebtoken";
 import catchAsync from "../utils/catchAsync";
 import sendResponse from "../utils/sendResponse";
 import { PostServices } from "./post.service";
@@ -26,7 +27,10 @@ const getAllPosts = catchAsync(async (req, res) => {
 
 const getSinglePosts = catchAsync(async (req, res) => {
   const { id } = req.params;
-  const result = await PostServices.getSinglePostFromDB(id);
+  const result = await PostServices.getSinglePostFromDB(
+    req.user as JwtPayload,
+    id
+  );
 
   sendResponse(res, {
     statusCode: 200,
@@ -38,7 +42,10 @@ const getSinglePosts = catchAsync(async (req, res) => {
 
 const deletePosts = catchAsync(async (req, res) => {
   const { id } = req.params;
-  const result = await PostServices.deletePostFromDB(id);
+  const result = await PostServices.deletePostFromDB(
+    req.user as JwtPayload,
+    id
+  );
 
   sendResponse(res, {
     statusCode: 200,

@@ -17,9 +17,10 @@ const auth = (...requiredRoles: TUserRole[]) => {
       process.env.JWT_ACCESS_SECRET_KEY as string
     ) as JwtPayload;
 
-    const { userId, role, iat } = decoded;
+    const { email, role, iat } = decoded;
 
-    const userData = await User.isUserExistsById(userId);
+    const userData = await User.isUserExistsById(email);
+
     if (!userData) {
       throw new AppError(404, "Credential errors.");
     }
@@ -30,7 +31,7 @@ const auth = (...requiredRoles: TUserRole[]) => {
     if (requiredRoles && !requiredRoles.includes(role)) {
       throw new AppError(401, "You are not authorized.");
     }
-
+    req.user = decoded as JwtPayload;
     next();
   });
 };

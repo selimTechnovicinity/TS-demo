@@ -1,3 +1,4 @@
+import { JwtPayload } from "jsonwebtoken";
 import AppError from "../../error/AppError";
 import { TUser } from "./user.interface";
 import { User } from "./user.model";
@@ -16,8 +17,12 @@ const getAllUsersFromDB = async () => {
   return result;
 };
 
-const getSingleUserFromDB = async (id: string) => {
+const getSingleUserFromDB = async (user: JwtPayload, id: string) => {
   const result = await User.findById(id);
+
+  if (result?.email !== user.email && user.role !== "admin") {
+    throw new AppError(401, "Unauthorized.");
+  }
 
   if (!result) {
     throw new AppError(404, "User not found.");
@@ -26,8 +31,8 @@ const getSingleUserFromDB = async (id: string) => {
   return result;
 };
 
-const deleteUserFromDB = async (id: string) => {
-  await getSingleUserFromDB(id);
+const deleteUserFromDB = async (user: JwtPayload, id: string) => {
+  await getSingleUserFromDB(user, id);
 
   const result = await User.findByIdAndDelete(id);
 
@@ -38,5 +43,5 @@ export const UserServices = {
   createUserIntoDB,
   getAllUsersFromDB,
   getSingleUserFromDB,
-  deleteUserFromDB
+  deleteUserFromDB,
 };

@@ -1,3 +1,4 @@
+import { JwtPayload } from "jsonwebtoken";
 import AppError from "../../error/AppError";
 import { TPost } from "./post.interface";
 import { Post } from "./post.model";
@@ -15,8 +16,19 @@ const getAllPostsFromDB = async () => {
   return result;
 };
 
-const getSinglePostFromDB = async (id: string) => {
-  const result = await Post.findById(id);
+const getSinglePostFromDB = async (user: JwtPayload, id: string) => {
+  const result = await Post.findById(id).populate<{
+    authorId: { email: string };
+  }>({
+    path: "authorId",
+    select: "email",
+  });
+
+  const author = result?.authorId as { email: string } | null;
+
+  if (author?.email !== user.email && user.role !== "admin") {
+    throw new AppError(401, "Unauthorized.");
+  }
 
   if (!result) {
     throw new AppError(404, "Post data not found.");
@@ -24,12 +36,12 @@ const getSinglePostFromDB = async (id: string) => {
   return result;
 };
 
-const deletePostFromDB = async (id: string) => {
-  await getSinglePostFromDB(id);
+const deletePostFromDB = async (user: JwtPayload, id: string) => {
+  await getSinglePostFromDB(user, id);
+
   const result = await Post.findByIdAndDelete(id);
   return result;
 };
-
 
 export const PostServices = {
   createPostIntoDB,

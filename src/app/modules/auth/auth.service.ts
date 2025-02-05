@@ -20,7 +20,7 @@ const loginUserIntoDB = async (payload: TLogin) => {
     throw new AppError(403, "Credential errors.");
   }
   const jwtPayload = {
-    userId: userData.email,
+    email: userData.email,
     role: userData.role,
   };
 
