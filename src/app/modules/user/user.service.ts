@@ -4,6 +4,9 @@ import { TUser } from "./user.interface";
 import { User } from "./user.model";
 
 const createUserIntoDB = async (payload: TUser) => {
+  if (await User.findOne({ email: payload.email })) {
+    throw new AppError(500, "User already exist with this email.");
+  }
   const result = await User.create(payload);
 
   return result;
