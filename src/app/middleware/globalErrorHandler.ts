@@ -19,7 +19,7 @@ const globalErrorHandler: ErrorRequestHandler = (error, req, res, next) => {
     message = error?.message;
     errorSources = [{ path: "", message: error?.message }];
   } else if (error instanceof Error) {
-    message = error?.message;
+    message = error.issues[0].message;
     errorSources = [{ path: "", message: error?.message }];
   }
 
