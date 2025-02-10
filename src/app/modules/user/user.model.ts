@@ -5,21 +5,32 @@ import { TUser, UserModel } from "./user.interface";
 const userSchema = new Schema<TUser, UserModel>({
   name: {
     type: String,
-    required: true,
+    required: [true, "Name is required"],
+    trim: true,
+    minlength: [3, "Name must be at least 3 characters long"],
+    maxlength: [50, "Name cannot exceed 50 characters"],
   },
   email: {
     type: String,
-    required: true,
+    required: [true, "Email is required"],
     unique: true,
+    trim: true,
+    lowercase: true,
+    match: [/^\S+@\S+\.\S+$/, "Please enter a valid email address"],
   },
   password: {
     type: String,
-    required: true,
-    select: 0,
+    required: [true, "Password is required"],
+    select: false,
+    minlength: [6, "Password must be at least 6 characters long"],
   },
   role: {
     type: String,
-    enum: ["admin", "user"],
+    enum: {
+      values: ["admin", "user"],
+      message: "Role must be either 'admin' or 'user'",
+    },
+    default: "user",
   },
   isDeleted: {
     type: Boolean,
