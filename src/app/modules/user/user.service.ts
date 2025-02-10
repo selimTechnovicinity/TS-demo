@@ -10,7 +10,7 @@ const createUserIntoDB = async (payload: TUser) => {
 };
 
 const getAllUsersFromDB = async () => {
-  const result = await User.find();
+  const result = await User.find({ isDeleted: false });
   if (!result) {
     throw new AppError(404, "User not found.");
   }
@@ -24,6 +24,10 @@ const getSingleUserFromDB = async (user: JwtPayload, id: string) => {
     throw new AppError(401, "Unauthorized.");
   }
 
+  if (result?.isDeleted) {
+    throw new AppError(404, "This User is no longer exists.");
+  }
+
   if (!result) {
     throw new AppError(404, "User not found.");
   }
@@ -34,7 +38,11 @@ const getSingleUserFromDB = async (user: JwtPayload, id: string) => {
 const deleteUserFromDB = async (user: JwtPayload, id: string) => {
   await getSingleUserFromDB(user, id);
 
-  const result = await User.findByIdAndDelete(id);
+  const result = await User.findByIdAndUpdate(
+    id,
+    { isDeleted: true },
+    { new: true }
+  );
 
   return result;
 };
