@@ -4,7 +4,11 @@ import sendResponse from "../utils/sendResponse";
 import { PostServices } from "./post.service";
 
 const createPost = catchAsync(async (req, res) => {
-  const result = await PostServices.createPostIntoDB(req.body);
+  const { user } = req;
+  const result = await PostServices.createPostIntoDB(
+    user as JwtPayload,
+    req.body
+  );
 
   sendResponse(res, {
     statusCode: 200,

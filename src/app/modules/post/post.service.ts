@@ -1,9 +1,12 @@
 import { JwtPayload } from "jsonwebtoken";
 import AppError from "../../error/AppError";
+import { User } from "../user/user.model";
 import { TPost } from "./post.interface";
 import { Post } from "./post.model";
 
-const createPostIntoDB = async (payload: TPost) => {
+const createPostIntoDB = async (user: JwtPayload, payload: TPost) => {
+  const userData = await User.isUserExistsById(user.email);
+  payload.authorId = userData._id.toString() as any;
   const result = await Post.create(payload);
   return result;
 };
